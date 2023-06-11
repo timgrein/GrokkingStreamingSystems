@@ -23,25 +23,13 @@ class VehicleCounter extends Operator {
   @Override
   public void apply(Event vehicleEvent, List<Event> eventCollector) {
     String vehicle = ((VehicleEvent)vehicleEvent).getData();
+
     Integer count = countMap.getOrDefault(vehicle, 0) + 1;
     countMap.put(vehicle, count);
     this.totalFees += vehicleTypeToFees.get(vehicle);
 
-    System.out.println("VehicleCounter --> ");
-    printCountMap();
-    printTotalFees();
+    VehicleCountInfo vehicleCountInfo = new VehicleCountInfo(countMap, totalFees);
+    eventCollector.add(new VehicleCountInfoEvent(vehicleCountInfo));
   }
 
-  private void printCountMap() {
-    List<String> vehicles = new ArrayList<>(countMap.keySet());
-    Collections.sort(vehicles);
-
-    for (String vehicle: vehicles) {
-      System.out.println("  " + vehicle + ": " + countMap.get(vehicle));
-    }
-  }
-
-  private void printTotalFees(){
-    System.out.printf("Total fees: %d\n", this.totalFees);
-  }
 }

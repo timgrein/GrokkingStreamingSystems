@@ -10,7 +10,8 @@ public class VehicleCountJob {
     Job job = new Job("vehicle_count");
 
     Stream bridgeStream = job.addSource(new SensorReader("sensor-reader", 9990));
-    bridgeStream.applyOperator(new VehicleCounter("vehicle-counter"));
+    Stream vehicleCountStream = bridgeStream.applyOperator(new VehicleCounter("vehicle-counter"));
+    vehicleCountStream.applyOperator(new VehicleCountPrinter("vehicle-count-printer"));
 
     System.out.println("This is a streaming job that counts vehicles in real time. " +
         "Please enter vehicle types like 'car' and 'truck' in the input terminal " +
